@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { fetchObjects } from '../api/objects';
+import { createManagedObject, fetchObjects } from '../api/objects';
+import type { CreateManagedObjectRequest } from '../api/objects';
 import type { ManagedObject } from '../types';
+import AddObjectDialog from './AddObjectDialog';
 import FilterBar from './FilterBar';
 import ObjectDetails from './ObjectDetails';
 import ObjectList from './ObjectList';
@@ -20,6 +22,7 @@ export default function ObjectsManager() {
     const [activeTab, setActiveTab] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [addObjectOpen, setAddObjectOpen] = useState(false);
 
     const loadObjects = useCallback(async (signal?: AbortSignal) => {
         setLoading(true);
@@ -69,6 +72,20 @@ export default function ObjectsManager() {
 
     const selectedObject = objects.find((object) => object.id === selectedId);
 
+    const handleCreateObject = async (body: CreateManagedObjectRequest) => {
+        const created = await createManagedObject(body);
+        setObjects((current) => [...current, created]);
+        setTypeFilter('');
+        setStatusFilter('');
+        setSearchQuery('');
+        setSelectedId(created.id);
+        setActiveTab(0);
+        setError(null);
+    };
+    const handleOpenAddObject: React.MouseEventHandler<HTMLButtonElement> = () => {
+        setAddObjectOpen(true);
+    };
+
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h5" component="h1" gutterBottom>
@@ -80,9 +97,16 @@ export default function ObjectsManager() {
                 searchQuery={searchQuery}
                 typeOptions={typeOptions}
                 statusOptions={statusOptions}
+                addDisabled={loading}
                 onTypeFilterChange={setTypeFilter}
                 onStatusFilterChange={setStatusFilter}
                 onSearchQueryChange={setSearchQuery}
+                onAddObject={handleOpenAddObject}
+            />
+            <AddObjectDialog
+                open={addObjectOpen}
+                onClose={() => setAddObjectOpen(false)}
+                onSubmit={handleCreateObject}
             />
             {error ? (
                 <Alert

@@ -1,9 +1,12 @@
+import React from 'react';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import AddIcon from '@mui/icons-material/Add';
 import type { SelectChangeEvent } from '@mui/material/Select';
 
 export interface FilterBarProps {
@@ -12,9 +15,11 @@ export interface FilterBarProps {
     searchQuery: string;
     typeOptions: string[];
     statusOptions: string[];
+    addDisabled?: boolean;
     onTypeFilterChange: (value: string) => void;
     onStatusFilterChange: (value: string) => void;
     onSearchQueryChange: (value: string) => void;
+    onAddObject: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function FilterBar({
@@ -23,9 +28,11 @@ export default function FilterBar({
     searchQuery,
     typeOptions,
     statusOptions,
+    addDisabled = false,
     onTypeFilterChange,
     onStatusFilterChange,
     onSearchQueryChange,
+    onAddObject,
 }: FilterBarProps) {
     const handleType = (event: SelectChangeEvent) => {
         onTypeFilterChange(event.target.value);
@@ -38,11 +45,14 @@ export default function FilterBar({
     return (
         <Box className="filterBar">
             <FormControl size="small" sx={{ minWidth: 180 }}>
-                <InputLabel id="filter-type-label">Filter Type</InputLabel>
+                <InputLabel id="filter-type-label" shrink>
+                    Filter Type
+                </InputLabel>
                 <Select
                     labelId="filter-type-label"
                     label="Filter Type"
                     value={typeFilter}
+                    displayEmpty
                     onChange={handleType}
                 >
                     <MenuItem value="">All</MenuItem>
@@ -55,11 +65,14 @@ export default function FilterBar({
             </FormControl>
 
             <FormControl size="small" sx={{ minWidth: 180 }}>
-                <InputLabel id="filter-status-label">Filter Status</InputLabel>
+                <InputLabel id="filter-status-label" shrink>
+                    Filter Status
+                </InputLabel>
                 <Select
                     labelId="filter-status-label"
                     label="Filter Status"
                     value={statusFilter}
+                    displayEmpty
                     onChange={handleStatus}
                 >
                     <MenuItem value="">All</MenuItem>
@@ -78,6 +91,14 @@ export default function FilterBar({
                 onChange={(event) => onSearchQueryChange(event.target.value)}
                 sx={{ minWidth: 220, flex: 1 }}
             />
+            <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={onAddObject}
+                disabled={addDisabled}
+            >
+                Add Object
+            </Button>
         </Box>
     );
 }

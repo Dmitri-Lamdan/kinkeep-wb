@@ -11,15 +11,15 @@ All object data comes from `GET /v1/objects`. Nested `events`, `intervals`, and 
 Props:
 - `typeFilter`, `statusFilter`, `searchQuery`
 - `typeOptions`, `statusOptions` from the API response
-- Planned: `onAddObject()` will be called when **+ Add Object** is clicked. This prop is not currently implemented.
+- `onAddObject()` is called when **+ Add Object** is clicked.
 
-## Planned Add Object workflow (not implemented)
+## Add Object workflow
 
-The following component behavior is a specification. The current UI does not yet implement the Add Object button, dialog, or form submission.
+The Add Object button, dialog, validation, and client-side submission are implemented. The POST contract is based on [api.md](api.md) and still needs confirmation against the service or its OpenAPI specification.
 
 ### ObjectsManager
-- Will own the Add Object modal open state and submit its form through `POST /v1/objects`
-- After a successful response, will clear the search query and both type and status filters, add the created object to the loaded list, and select it so it remains visible
+- Owns the Add Object modal open state and submits its form through `POST /v1/objects`
+- After a successful response, clears the search query and both type and status filters, adds the created object to the loaded list, and selects it so it remains visible
 
 ### AddObjectDialog
 - Modal form opened from the Filter Bar through `ObjectsManager`

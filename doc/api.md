@@ -15,7 +15,7 @@ Response: `200 OK` with a JSON array of managed objects. Nested `events`, `inter
 
 ## Create managed object
 
-The planned **+ Add Object** UI flow will create a new `ManagedObject` by calling this endpoint. The endpoint contract is documented here; the button and dialog are not currently implemented in the UI.
+The **+ Add Object** UI creates a `ManagedObject` by calling this endpoint using the contract below. The client implementation is present, but the endpoint details are assumptions and still need confirmation against the service or its OpenAPI specification.
 
 ```http
 POST /v1/objects

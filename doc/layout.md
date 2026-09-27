@@ -8,11 +8,11 @@
 - `<Select>`: Filter Type
 - `<Select>`: Filter Status
 - `<TextField>`: Search
-- Planned `<Button>`: + Add Object. Clicking it opens the Add Object modal form; it does not navigate away from the main form.
+- `<Button>`: + Add Object. Clicking it opens the Add Object modal form; it does not navigate away from the main form.
 
 ## Add Object modal form
 
-> **Implementation status:** This section describes planned behavior. The Add Object button, modal, and form submission are not currently implemented in the UI.
+> **Implementation status:** The Add Object button, modal, validation, and client-side submission are implemented. The assumed `POST /v1/objects` contract still needs confirmation against the service or its OpenAPI specification.
 
 - Opened in modal mode by clicking **+ Add Object** in the Filter Bar. The user stays on the Objects Manager page.
 - Submitting creates an object with `POST /v1/objects`; request fields and server errors are defined in [api.md](api.md)
