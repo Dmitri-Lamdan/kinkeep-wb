@@ -13,6 +13,18 @@ The Vite dev server proxies `/v1` to `http://localhost:8080`, so the browser cal
 
 Response: `200 OK` with a JSON array of managed objects. Nested `events`, `intervals`, and `serviceTasks` are included on each object. There is no separate events request.
 
+## Load objects that are actual now
+
+The main form's **Actually** checkbox selects a separate, read-only view. When checked, the client calls `GET /v1/objects/actual` instead of `GET /v1/objects`. The backend returns all objects with `status=active`; objects with `status=inactive` are excluded. Type, `currentValue`, `nextServiceDate`, and service-task status do not affect inclusion. These fields and nested records are still returned as object details. The set reflects saved state when the request is processed; the client sends no date, time, or timezone. The endpoint returns `200 OK` with an array using the same `ManagedObject` shape as the regular objects response. An empty result is an empty array. The response does not include `evaluatedAt` because the current UI does not display snapshot time; if that UI requirement is added, extend the response contract with a UTC `evaluatedAt` value.
+
+This request does not create or update objects. When the checkbox is unchecked, the existing `GET /v1/objects` flow and business logic remain unchanged. The checked mode is display-only: the client must not offer create, update, delete, or related-data mutations for the returned objects.
+
+```http
+GET /v1/objects/actual
+Accept: application/json
+Authorization: Bearer <token>
+```
+
 ## Create managed object
 
 The **+ Add Object** UI creates a `ManagedObject` by calling this endpoint using the contract below. The client implementation is present, but the endpoint details are assumptions and still need confirmation against the service or its OpenAPI specification.
@@ -129,6 +141,8 @@ The sample payload returns an empty array. The form reads optional `id`, `name`,
 | Form control | Source |
 | --- | --- |
 | Objects list | `name`, `type`, `status` |
+| Actually checkbox (checked) | `GET /v1/objects/actual`; replaces the regular objects response with all `status=active` objects and enables read-only mode |
+| Actually checkbox (unchecked) | Existing `GET /v1/objects` flow and business logic |
 | Filter Type / Filter Status | Distinct `type` and `status` values from the response |
 | Search | Case-insensitive match on `name` |
 | Details tab | Scalar fields on the selected object |
@@ -142,6 +156,7 @@ The sample payload returns an empty array. The form reads optional `id`, `name`,
 classDiagram
     class ObjectsApi {
         +fetchObjects(signal) ManagedObject[]
+        +fetchActualObjects(signal) ManagedObject[]
         +createManagedObject(body) ManagedObject
     }
 
@@ -199,6 +214,7 @@ classDiagram
     ManagedObject "1" --> "*" ObjectInterval : intervals
     ManagedObject "1" --> "*" ServiceTask : serviceTasks
     ObjectsManager --> ObjectsApi : GET /v1/objects
+    ObjectsManager --> ObjectsApi : GET /v1/objects/actual (Actually mode)
     ObjectsManager --> ObjectsApi : POST /v1/objects (Add Object)
     ObjectsManager --> ObjectList
     ObjectsManager --> ObjectDetails
@@ -223,6 +239,21 @@ sequenceDiagram
     Proxy-->>Client: ManagedObject[]
     Client-->>Form: normalized objects
     Form-->>User: Object list
+
+    User->>Form: Check Actually
+    Form->>Client: fetchActualObjects()
+    Client->>Proxy: GET /v1/objects/actual
+    Proxy->>API: GET /v1/objects/actual
+    API-->>Proxy: 200 JSON array evaluated at one request snapshot
+    Proxy-->>Client: ManagedObject[]
+    Client-->>Form: Replace displayed list and selected details
+    Form-->>User: Actual objects and all details in read-only mode
+
+    User->>Form: Uncheck Actually
+    Form->>Client: fetchObjects()
+    Client->>Proxy: GET /v1/objects
+    Proxy->>API: GET /v1/objects
+    Form-->>User: Existing business logic and editable actions restored
 
     User->>Form: Click Add Object and submit form
     Form->>Client: createManagedObject(body)

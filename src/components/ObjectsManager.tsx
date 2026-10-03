@@ -4,9 +4,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { createManagedObject, fetchObjects } from '../api/objects';
 import type { CreateManagedObjectRequest } from '../api/objects';
+import packageJson from '../../package.json';
+import programCaption from '../assets/program-caption.png';
 import type { ManagedObject } from '../types';
 import AddObjectDialog from './AddObjectDialog';
 import FilterBar from './FilterBar';
@@ -88,10 +89,21 @@ export default function ObjectsManager() {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Typography variant="h5" component="h1" gutterBottom>
-                Loading Process – Objects Manager
-            </Typography>
             <FilterBar
+                header={
+                    <Box className="filterBarHeading">
+                        <img
+                            src={programCaption}
+                            alt="Loading Process"
+                            style={{
+                                display: 'block',
+                                width: 'min(360px, 100%)',
+                                height: 'auto',
+                            }}
+                        />
+                        <span className="appVersion">Version {packageJson.version}</span>
+                    </Box>
+                }
                 typeFilter={typeFilter}
                 statusFilter={statusFilter}
                 searchQuery={searchQuery}

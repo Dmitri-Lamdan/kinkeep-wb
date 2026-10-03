@@ -2,13 +2,20 @@
 
 ## Root
 - `<Box>` container with padding
-- `<Typography>` header: "Loading Process – Objects Manager"
+- Header row with the Loading Process image on the left and Type/Status filters on the right
+- Search and Add Object controls on the row below
 
 ## Filter Bar
 - `<Select>`: Filter Type
 - `<Select>`: Filter Status
 - `<TextField>`: Search
+- `<Checkbox>` with visible label `Actually`: checked loads the current actual-object set from `GET /v1/objects/actual`; unchecked retains the existing object flow
 - `<Button>`: + Add Object. Clicking it opens the Add Object modal form; it does not navigate away from the main form.
+
+## Actually mode
+- The checkbox belongs to the main form, outside the Add Object modal.
+- When checked, replace the normal list with the response from `GET /v1/objects/actual`. Include all objects with `status=active`; exclude `inactive` objects. Type, current value, service date, and service-task status do not filter the list. All object fields and nested details are shown read-only.
+- Disable create, edit, delete, and related-data actions while checked. When unchecked, restore the existing behavior.
 
 ## Add Object modal form
 

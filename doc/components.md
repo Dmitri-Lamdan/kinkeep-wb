@@ -1,10 +1,12 @@
 # React Components
 
-All object data comes from `GET /v1/objects`. Nested `events`, `intervals`, and `serviceTasks` are read from the selected object. There is no second request.
+In the default mode, object data comes from `GET /v1/objects`. In `Actually` mode, the list is loaded from `GET /v1/objects/actual`. In both modes, nested `events`, `intervals`, and `serviceTasks` are read from the selected object.
 
 ## ObjectsManager
 - Root component, holds state and layout
 - Loads `ManagedObject[]` from `GET /v1/objects`
+- Provides an `Actually` checkbox on the main form. Unchecked, it retains the current loading/business-logic flow; checked, it loads `ManagedObject[]` from `GET /v1/objects/actual`.
+- In checked mode, displays all returned object details as read-only and disables create, update, delete, and related-data mutations. Unchecking returns to the existing mode.
 - Filters by `type`, `status`, and `name`
 
 ## FilterBar

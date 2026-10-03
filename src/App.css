@@ -1,9 +1,57 @@
 ﻿.filterBar {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filterBarHeader,
+.filterBarControls,
+.filterBarPrimaryFilters,
+.filterBarActions {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+}
+
+.filterBarHeader {
+  justify-content: flex-start;
+}
+
+.filterBarControls {
+  flex: 1 1 420px;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.filterBarHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.appVersion {
+  padding-bottom: 4px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.filterBarPrimaryFilters {
+  flex-wrap: nowrap;
+}
+
+.filterBarPrimaryFilters>* {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.filterBarActions {
+  flex-wrap: nowrap;
 }
 
 .objectListCard,
@@ -16,6 +64,35 @@
   margin-bottom: 8px;
   color: rgba(0, 0, 0, 0.6);
   font-size: 12px;
+}
+
+.objectTypeLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-bottom: 12px;
+}
+
+.objectTypeLegendItem,
+.objectTypeIcon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.objectTypeLegendItem {
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.objectSummary {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.objectTypeIcon {
+  flex: 0 0 auto;
 }
 
 .detailsSection {
